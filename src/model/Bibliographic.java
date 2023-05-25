@@ -58,4 +58,8 @@ public abstract class Bibliographic{
         this.readedPages+=readedPages;
     }
 
+    public String getName(){
+        return name;
+    }
+
 }

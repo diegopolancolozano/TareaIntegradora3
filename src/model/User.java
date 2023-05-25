@@ -18,13 +18,18 @@ public abstract class User{
         this.library = new ArrayList<Bill>();
     }
 
+    @Override
     public String toString(){
-        return "Usuario: " + name + ", de cedula:" + cc;
+        String stringDate = "";
+        stringDate += joiningDate.get(Calendar.DAY_OF_MONTH) + "/";
+        stringDate += joiningDate.get(Calendar.MONTH) + "/";
+        stringDate += joiningDate.get(Calendar.YEAR);
+        return "Usuario: " + name + ", de cedula:" + cc + "\nfecha de union:" + stringDate + "\n";
     }
 
     public String addBill(String id, double moneyPaid, int typeProduct){
         library.add(new Bill(id, moneyPaid, typeProduct));
-        return "Aniadido";
+        return library.get(library.size()-1).toString();
     }
 
     public ArrayList<String> getIds(){
@@ -83,6 +88,21 @@ public abstract class User{
         }
         String id = library.get(actualIndex).getId();
         return id;
+    }
+
+    public boolean eraseProductOfLibrary(String id){
+        boolean erased = false;
+        for(int i=0; i<library.size() && !erased; i++){
+            if(library.get(i).getId().equals(id)){
+                library.remove(i);
+                erased = true;
+            }
+        }
+        return erased;
+    }
+
+    public String getName(){
+        return this.name;
     }
 
 }

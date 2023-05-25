@@ -32,13 +32,12 @@ public class Controller{
         date.set(Calendar.YEAR, 1915);
         date.set(Calendar.MONTH, Calendar.OCTOBER);
         date.set(Calendar.DAY_OF_MONTH, 20);
-        texts.add(new Book("metamorfosis kafka", "000" , date , "metamorfosisDeKafka.com", 53, "Un hombre se vuelve bicho", 3, 12.5, 0));
-        texts.add(new Book("StarWars episodio 1", "001" , date , "StarWars.com", 288, "Hombres lunares pelean", 1, 30, 0));
-        texts.add(new Book("Harry Potter La reliquia o caliz de fuego", "003" , date , "HarryPotter.com", 220, "Un chico miope aprende magía", 2, 25, 0));
-        texts.add(new Magazine("Maestro Legal", "004", date, "SecretariaDeEducacion.com", 40, 3, "semanal", 4, 0));
-        texts.add(new Magazine("El Q'hubo", "005", date, "Qhubo.com", 8, 1, "semanal", 0, 0));
-        texts.add(new Magazine("WebDesigner", "005", date, "WebDesigner.com", 100, 2, "mensual", 10, 0));
-
+        texts.add(new Book("metamorfosis kafka", "000" , date , "metamorfosisDeKafka.com", 53, "Un hombre se vuelve bicho", 3, 12.5));
+        texts.add(new Book("StarWars episodio 1", "001" , date , "StarWars.com", 288, "Hombres lunares pelean", 1, 30));
+        texts.add(new Book("Harry Potter La reliquia o caliz de fuego", "003" , date , "HarryPotter.com", 220, "Un chico miope aprende magía", 2, 25));
+        texts.add(new Magazine("Maestro Legal", "004", date, "SecretariaDeEducacion.com", 40, 3, "semanal", 4));
+        texts.add(new Magazine("El Q'hubo", "005", date, "Qhubo.com", 8, 1, "semanal", 0));
+        texts.add(new Magazine("WebDesigner", "005", date, "WebDesigner.com", 100, 2, "mensual", 10));
     }
 
     public boolean isHexadecimal(String data){
@@ -58,16 +57,26 @@ public class Controller{
         }
     }
     
-    public String addText(String name, String id, Calendar publicationDate, String url, int pages, int category, String periodicity, double priceSuscriptions, int numberOfSuscriptions){
+    public String addText(String name, String id, Calendar publicationDate, String url, int pages, int category, String periodicity, double priceSuscriptions){
         String msg = "añadido";
-        texts.add(new Magazine(name, id, publicationDate, url, pages, category, periodicity, priceSuscriptions, numberOfSuscriptions));
+        texts.add(new Magazine(name, id, publicationDate, url, pages, category, periodicity, priceSuscriptions));
         return msg;
     }
 
-    public String addText(String name, String id, Calendar publicationDate, String url, int pages, String review, int gender, double price, int sold){
+    public String addText(String name, String id, Calendar publicationDate, String url, int pages, String review, int gender, double price){
         String msg = "añadido";
-        texts.add(new Book(name, id, publicationDate, url, pages, review, gender, price, sold));
+        texts.add(new Book(name, id, publicationDate, url, pages, review, gender, price));
         return msg;
+    }
+
+    public int getIndexUserByName(String nickname){
+        int index = -1;
+        for(int i=0; i<users.size(); i++){
+            if(users.get(i).getName().equalsIgnoreCase(nickname)){
+                index = i;
+            }
+        }
+        return index;
     }
 
     public boolean usedId(String id){
@@ -122,7 +131,7 @@ public class Controller{
             users.get(i).setBill(texts.get(index).getId(), id, price, 1);
         }
         texts.get(index).setCommon(name, id, publicationDate, url, pages);
-        ((Book)(texts.get(index))).setEverything(review, gender, price, sold);
+        ((Book)(texts.get(index))).setEverything(review, gender, price);
         return "Producto modificado";
     }
     public String modifyProductMagazine(int index, String name, String id, Calendar publicationDate, String url, int pages, int category, String periodicity, double priceSuscription, int numberOfSuscriptions){
@@ -135,7 +144,11 @@ public class Controller{
     }
 
     public String eraseProduct(int index){
+        String id = texts.get(index).getId();
         texts.remove(index);
+        for(int i=0; i<users.size(); i++){
+            users.get(i).eraseProductOfLibrary(id);
+        }
         return "eliminado con exito";
     }
 
@@ -146,35 +159,35 @@ public class Controller{
         int typeProduct=0;
         boolean hasSpace=true;
 
-        if(hasSpace){
-            msg=users.get(indexUser).addBill(idText, price, typeProduct);
-        }else{
-            msg="No hay espacio";
-        }
-
         if(texts.get(indexText) instanceof Book){
             price = ((Book)(texts.get(indexText))).getPrice();
             ((Book)texts.get(indexText)).addSold();
             typeProduct=1;
         }
+        
         if(texts.get(indexText) instanceof Magazine){
             price = ((Magazine)(texts.get(indexText))).getPriceSuscriptions();
             ((Magazine)texts.get(indexText)).addSuscription();
             typeProduct=2;
-        }   
+        } 
 
         if(users.get(indexUser) instanceof RegularUser){
             if(texts.get(indexText) instanceof Book) hasSpace = ((RegularUser)users.get(indexUser)).hasSpaceForBook();
             if(texts.get(indexText) instanceof Magazine) hasSpace = ((RegularUser)users.get(indexUser)).hasSpaceForMagazine();
         }
 
-        ArrayList<String> arrayIds = new ArrayList<String>();
+        if(hasSpace){
+            msg=users.get(indexUser).addBill(idText, price, typeProduct);
+        }else{
+            msg="No hay espacio";
+        }
+        /**ArrayList<String> arrayIds = new ArrayList<String>();
         arrayIds=users.get(indexUser).getIds();
         for(int i=0; i<arrayIds.size(); i++){
             if(texts.get(indexText).getId().equals(arrayIds.get(i))){   //Si se repite el id
                 return "Producto repetido";
             }
-        }
+        }**/
 
         return msg;
     }
@@ -233,5 +246,40 @@ public class Controller{
         texts.get(getIndexProductById(id)).addReadedPages(readedPages);
     }
 
+    public String eraseProductOfUserById(int index, String id){
+        String msg = "";
+        if(users.get(index).eraseProductOfLibrary(id)){
+            msg = "Borrado";
+        }else{
+            msg = "No se encontró";
+        }
+        return msg;
+    }
+
+    public String eraseProductOfUserByName(int index, String name){
+        String id = getIdOfTextByName(name);
+        String msg = eraseProductOfUserById(index, id);
+        return msg;
+    }
+
+    public String getIdOfTextByName(String name){
+        String msg = "";
+        for(int i=0; i<texts.size(); i++){
+            if(texts.get(i).getName().equalsIgnoreCase(name)){
+                msg = texts.get(i).getId();
+            }
+        }
+        return msg;
+    }
+    
+    public int getIndexUserById(String idUser){
+        int index = -1;
+        for(int i=0; i<texts.size(); i++){
+            if(texts.get(i).getId().equalsIgnoreCase(idUser)){
+                index = i;
+            }
+        }
+        return index;
+    }
 
 }

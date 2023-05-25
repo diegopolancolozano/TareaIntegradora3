@@ -8,6 +8,8 @@ public class Bill{
     private Calendar transactionDate;
     private double moneyPaid;
     private TypeProduct typeProduct;
+    private int leftPage;
+    private Calendar publicationDate;
 
     public Bill(String id, double moneyPaid, int typeProduct){
         this.idProduct=id;

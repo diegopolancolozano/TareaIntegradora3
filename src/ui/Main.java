@@ -4,6 +4,19 @@ import java.util.Scanner;
 import model.Controller;
 import java.util.Calendar;
 
+// To do list
+// que recuerde en que página se dejó
+// requerimiento 8
+// Eliminar suscripción a revista
+// validaciones
+// javadoc
+// Analisis de requerimientos
+// mejorar la selección de productos
+// Mejorar la selección de usuarios
+// trazabilidad
+// Organizar por fecha de publicación
+// publicidades
+
 public class Main{
 
     private Controller controller;
@@ -29,17 +42,19 @@ public class Main{
             System.out.println("3. Modificar Producto");
             System.out.println("4. Eliminar Producto");
             System.out.println("5. añadir producto a usuario");
-            System.out.println("6. Leer producto de cliente");
-
+            System.out.println("6. Eliminar producto de un usuario");
+            System.out.println("7. Leer producto de cliente");
             System.out.println("0. Salir");
             option = reader.nextInt();
             switch(option){
+                case 0 -> reader.close();
                 case 1 -> System.out.println(addUser());
                 case 2 -> System.out.println(addText());
                 case 3 -> System.out.println(modifyProduct());
                 case 4 -> System.out.println(eraseProduct());
                 case 5 -> System.out.println(addTextToUser());
-                case 6 -> System.out.println(readLibraryOfUser());
+                case 6 -> System.out.println(eraseAccountProduct());
+                case 7 -> System.out.println(readLibraryOfUser());
             }
         }while(option!=0);
     }
@@ -91,8 +106,6 @@ public class Main{
             String review=reader.nextLine();
             System.out.println("Inserte el precio");
             double price = reader.nextDouble();
-            System.out.println("Inserte cantidad vendida");
-            int sold = reader.nextInt();
             System.out.println("Inserte genero");
             System.out.println("1 -> ciencia ficción, 2 -> fantasia, 3 -> novela");
             int gender = reader.nextInt();
@@ -102,7 +115,7 @@ public class Main{
             do{
                 id=reader.next();
             }while(!controller.isHexadecimal(id) && controller.usedId(id));
-            msg=controller.addText(name, id, publicationDate, url, pages, review, gender, price, sold);
+            msg=controller.addText(name, id, publicationDate, url, pages, review, gender, price);
             break;
 
             case 2:
@@ -111,8 +124,6 @@ public class Main{
             String periodicity = reader.nextLine();
             System.out.println("Inserte valor de suscripción");
             double priceSuscriptions = reader.nextDouble();
-            System.out.println("Inserte cantidad de suscripciones");
-            int numberOfSuscriptions = reader.nextInt();
             System.out.println("Inserte categoria");
             System.out.println("1 -> variedades, 2 -> disenio, 3 -> cientifica");
             int category = reader.nextInt();
@@ -122,7 +133,7 @@ public class Main{
             do{
                 id2=reader.next();
             }while(!controller.isAlphaNumeric(id2) && controller.usedId(id2));
-            msg=controller.addText(name, id2, publicationDate, url, pages, category, periodicity, priceSuscriptions, numberOfSuscriptions);
+            msg=controller.addText(name, id2, publicationDate, url, pages, category, periodicity, priceSuscriptions);
             break;
             default:
                 msg = "no valido";
@@ -406,5 +417,40 @@ public class Main{
             default:
             System.out.println("Saliendo");
         }
+    }
+
+    public int selectUser(){
+        System.out.println("Inserte el id del usuario");
+        reader.nextLine();
+        String idUser = reader.nextLine();
+        int index = controller.getIndexUserById(idUser);
+        return index;
+    }
+
+    public String eraseAccountProduct(){
+        String msg = "";
+        int index = selectUser();
+        if(index == -1){
+            msg = "No existe ese usuario";
+        }else{
+            System.out.println("Quiere borrar el producto por: \n1. id \n2. nombre");
+            int option;
+            String information;
+            do{
+                option = reader.nextInt();
+            }while(option != 1 && option !=2);
+            System.out.println("Inserte informacion");
+            reader.nextLine();
+            switch(option){
+                case 1:
+                    information = reader.nextLine();
+                    msg = controller.eraseProductOfUserById(index, information);
+                    break;
+                case 2:
+                    information = reader.nextLine();
+                    msg = controller.eraseProductOfUserByName(index, information);
+            }
+        }
+        return msg;
     }
 }

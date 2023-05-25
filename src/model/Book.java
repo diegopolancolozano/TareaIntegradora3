@@ -7,7 +7,7 @@ public class Book extends Bibliographic{
     private Gender gender;
     private double price;
     private int sold;
-    public Book(String name, String id, Calendar publicationDate, String urlImage, int pages, String review, int gender, double price, int sold){
+    public Book(String name, String id, Calendar publicationDate, String urlImage, int pages, String review, int gender, double price){
         super(name, id, publicationDate, urlImage, pages);
         this.review=review;
         switch(gender){
@@ -16,7 +16,7 @@ public class Book extends Bibliographic{
             case 3 -> this.gender=Gender.NOVEL;
         }
         this.price=price;
-        this.sold=sold;
+        this.sold=0;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class Book extends Bibliographic{
         return msg;
     }
 
-    public void setEverything(String review, int gender, double price, int sold){
+    public void setEverything(String review, int gender, double price){
         this.review=review;
         switch(gender){
             case 1 -> this.gender=Gender.SCIENCE_FICTION;
@@ -41,7 +41,7 @@ public class Book extends Bibliographic{
             case 3 -> this.gender=Gender.NOVEL;
         }
         this.price=price;
-        this.sold=sold;
+        this.sold=0;
     }
 
     public double getPrice(){
