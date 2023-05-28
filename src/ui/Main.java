@@ -4,12 +4,6 @@ import java.util.Scanner;
 import model.Controller;
 import java.util.Calendar;
 
-// To do list
-// javadoc
-// Analisis de requerimientos req 8
-// trazabilidad
-// video
-
 public class Main{
 
     private Controller controller;
