@@ -206,50 +206,6 @@ public class Main{
         return msg;
     }
 
-    public int choseUser(){
-        int option=0;
-        int indexUser=0;
-        int madeUsers = controller.getMadeUsers();
-        if(madeUsers==0) {
-            return -1;
-        }
-        System.out.println("Escoje un usuario");
-        while(option!=1){
-            if(indexUser==madeUsers){
-                System.out.println("No hay más usuarios");
-                return -2;
-            }else{
-                System.out.println(controller.getUserInfo(indexUser));
-                System.out.println("1: Seleccionar, 2: Siguiente");
-                option = validateInteger();
-                if(option==2) indexUser+=1;
-            }
-        }
-        return indexUser;
-    }
-
-    public int choseProduct(){
-        int option=0;
-        int indexProduct=0;
-        int madeProducts = controller.getMadeProducts();
-        if(madeProducts==0) {
-            return -1;
-        }
-        System.out.println("Escoje un producto");
-        while(option!=1){
-            if(indexProduct==madeProducts){
-                System.out.println("No hay más usuarios");
-                return -2;
-            }else{
-                System.out.println(controller.getProductInfo(indexProduct));
-                System.out.println("1: Seleccionar, 2: Siguiente");
-                option = validateInteger();
-                if(option==2) indexProduct+=1;
-            }
-        }
-        return indexProduct;
-    }
-
     public String readLibraryOfUser(){
         int indexUser = selectUser();
         int actualPageLibrary = 0;
