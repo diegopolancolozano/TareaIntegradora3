@@ -9,10 +9,6 @@ import java.util.Calendar;
 // Analisis de requerimientos req 8
 // trazabilidad
 // video
-//
-// validaciones
-// requerimiento 8
-// comprar varias cosas
 
 public class Main{
 
