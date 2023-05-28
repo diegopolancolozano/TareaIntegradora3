@@ -5,17 +5,14 @@ import model.Controller;
 import java.util.Calendar;
 
 // To do list
-// que recuerde en que página se dejó
-// requerimiento 8
-// Eliminar suscripción a revista
-// validaciones
 // javadoc
-// Analisis de requerimientos
-// mejorar la selección de productos
-// Mejorar la selección de usuarios
+// Analisis de requerimientos req 8
 // trazabilidad
-// Organizar por fecha de publicación
-// publicidades
+// video
+//
+// validaciones
+// requerimiento 8
+// comprar varias cosas
 
 public class Main{
 
@@ -44,10 +41,11 @@ public class Main{
             System.out.println("5. añadir producto a usuario");
             System.out.println("6. Eliminar producto de un usuario");
             System.out.println("7. Leer producto de cliente");
+            System.out.println("8. generar reporte");
             System.out.println("0. Salir");
-            option = reader.nextInt();
+            option = validateInteger();
             switch(option){
-                case 0 -> reader.close();
+                case 0 -> System.out.println(exit());
                 case 1 -> System.out.println(addUser());
                 case 2 -> System.out.println(addText());
                 case 3 -> System.out.println(modifyProduct());
@@ -55,6 +53,7 @@ public class Main{
                 case 5 -> System.out.println(addTextToUser());
                 case 6 -> System.out.println(eraseAccountProduct());
                 case 7 -> System.out.println(readLibraryOfUser());
+                case 8 -> System.out.println(reportMenu());
             }
         }while(option!=0);
     }
@@ -67,7 +66,7 @@ public class Main{
         String cc=reader.next();
         System.out.println("Inserte si es premium o si es usuario regular");
         System.out.println("1-> Si, 2-> no");
-        int premiumOrNot = reader.nextInt();
+        int premiumOrNot = validateInteger();
         String msg=controller.addUser(name, cc, premiumOrNot);
         return msg;
     }
@@ -78,11 +77,11 @@ public class Main{
         String name=reader.nextLine();
         System.out.println("Inserte la fecha de publicación");
         System.out.println("año");
-        int year = reader.nextInt();
+        int year = validateInteger();
         System.out.println("mes");
-        int month = reader.nextInt();
+        int month = validateInteger();
         System.out.println("día");
-        int day = reader.nextInt();
+        int day = validateInteger();
         Calendar publicationDate = Calendar.getInstance();
         publicationDate.set(Calendar.YEAR, year);
         publicationDate.set(Calendar.MONTH, month);
@@ -91,12 +90,12 @@ public class Main{
         System.out.println("Inserte el link de la portada");
         String url=reader.next();
         System.out.println("Inserte páginas");
-        int pages=reader.nextInt();
+        int pages = validateInteger();
 
 
         System.out.println("Inserte si es una revista o si es un libro");
         System.out.println("1-> Libro, 2-> Revista");
-        int decision = reader.nextInt();
+        int decision = validateInteger();
 
         String msg;
         switch(decision){
@@ -105,17 +104,12 @@ public class Main{
             reader.nextLine();
             String review=reader.nextLine();
             System.out.println("Inserte el precio");
-            double price = reader.nextDouble();
+            double price = validateDouble();
             System.out.println("Inserte genero");
             System.out.println("1 -> ciencia ficción, 2 -> fantasia, 3 -> novela");
-            int gender = reader.nextInt();
+            int gender = validateInteger();
 
-            System.out.println("Inserte el id:");
-            String id;
-            do{
-                id=reader.next();
-            }while(!controller.isHexadecimal(id) && controller.usedId(id));
-            msg=controller.addText(name, id, publicationDate, url, pages, review, gender, price);
+            msg=controller.addText(name, publicationDate, url, pages, review, gender, price);
             break;
 
             case 2:
@@ -123,17 +117,12 @@ public class Main{
             reader.nextLine();
             String periodicity = reader.nextLine();
             System.out.println("Inserte valor de suscripción");
-            double priceSuscriptions = reader.nextDouble();
+            double priceSuscriptions = validateDouble();
             System.out.println("Inserte categoria");
             System.out.println("1 -> variedades, 2 -> disenio, 3 -> cientifica");
-            int category = reader.nextInt();
+            int category = validateInteger();
 
-            System.out.println("Inserte el id:");
-            String id2;
-            do{
-                id2=reader.next();
-            }while(!controller.isAlphaNumeric(id2) && controller.usedId(id2));
-            msg=controller.addText(name, id2, publicationDate, url, pages, category, periodicity, priceSuscriptions);
+            msg = controller.addText(name, publicationDate, url, pages, category, periodicity, priceSuscriptions);
             break;
             default:
                 msg = "no valido";
@@ -144,41 +133,22 @@ public class Main{
 
     public String modifyProduct(){
         String msg="";
-        int option=0;
         int index=0;
-        int madeProducts = controller.getMadeProducts();
-        System.out.println("Escoga un producto");
+        index = selectProduct();
 
-        if(madeProducts==0) {
-            return "No hay productos";
-        }
-        while(option!=3 && option!=1 && index<madeProducts){
-            if(index==madeProducts){
-                return "No hay más";
-            }else{
-                System.out.println(controller.getProductInfo(index));
-                System.out.println("1: Seleccionar, 2: Siguiente, 3: salir");
-                option=reader.nextInt();
-                if(option==2) index+=1;
-            }
-        }
-
-        if(option==3){
-            msg="saliendo...";
-        }else if(index==madeProducts){
-            System.out.println("No hay más");
+        if(index==-1){
+            msg="no hay";
         }else{
             System.out.println("Inserte nueva informacion");
-            reader.nextLine();
             System.out.println("Inserte el nombre del producto");
             String name=reader.nextLine();
             System.out.println("Inserte la fecha de publicación");
             System.out.println("año");
-            int year = reader.nextInt();
+            int year = validateInteger();
             System.out.println("mes");
-            int month = reader.nextInt();
+            int month = validateInteger();
             System.out.println("día");
-            int day = reader.nextInt();
+            int day = validateInteger();
             Calendar publicationDate = Calendar.getInstance();
             publicationDate.set(Calendar.YEAR, year);
             publicationDate.set(Calendar.MONTH, month);
@@ -187,44 +157,31 @@ public class Main{
             System.out.println("Inserte el link de la portada");
             String url=reader.next();
             System.out.println("Inserte páginas");
-            int pages=reader.nextInt();
+            int pages = validateInteger();
         
             if(controller.isItBook(index)){
                 System.out.println("Inserte la reseña");
                 reader.nextLine();
-                String review=reader.nextLine();
+                String review=reader.nextLine();    
                 System.out.println("Inserte el precio");
-                double price = reader.nextDouble();
-                System.out.println("Inserte cantidad vendida");
-                int sold = reader.nextInt();
+                double price = validateDouble();
                 System.out.println("Inserte genero");
                 System.out.println("1 -> ciencia ficción, 2 -> fantasia, 3 -> novela");
-                int gender = reader.nextInt();
+                int gender = validateInteger();
 
                 System.out.println("Inserte el id:");
-                String id;
-                do{
-                    id=reader.next();
-                }while(!controller.isHexadecimal(id) && controller.usedId(id));
-                msg = controller.modifyProductBook(index, name, id, publicationDate, url, pages, review, gender, price, sold);
+                msg = controller.modifyProductBook(index, name, publicationDate, url, pages, review, gender, price);
             }else{
                 System.out.println("Inserte la periodicidad (mensual, semanal, etc)");
                 reader.nextLine();
                 String periodicity = reader.nextLine();
                 System.out.println("Inserte valor de suscripción");
-                double priceSuscription = reader.nextDouble();
-                System.out.println("Inserte cantidad de suscripciones");
-                int numberOfSuscriptions = reader.nextInt();
+                double priceSuscription = validateDouble();
                 System.out.println("Inserte categoria");
                 System.out.println("1 -> variedades, 2 -> disenio, 3 -> cientifica");
-                int category = reader.nextInt();
+                int category = validateInteger();
 
-                System.out.println("Inserte el id:");
-                String id;
-                do{
-                    id=reader.next();
-                }while(!controller.isAlphaNumeric(id) && controller.usedId(id));
-                msg = controller.modifyProductMagazine(index, name, id, publicationDate, url, pages, category, periodicity, priceSuscription, numberOfSuscriptions);
+                msg = controller.modifyProductMagazine(index, name, publicationDate, url, pages, category, periodicity, priceSuscription);
             }
         }
         return msg;
@@ -232,28 +189,11 @@ public class Main{
 
     public String eraseProduct(){
         String msg="";
-        int option=0;
-        int index=0;
-        int madeProducts = controller.getMadeProducts();
-        System.out.println("Escoga un producto");
+        int index=-1;
+        index = selectProduct();
 
-        if(madeProducts==0) {
-            return "No hay productos";
-        }
-        while(option!=3 && option!=1 && index<madeProducts){
-            if(index==madeProducts){
-                return "No hay más";
-            }else{
-                System.out.println(controller.getProductInfo(index));
-                System.out.println("1: Seleccionar, 2: Siguiente, 3: salir");
-                option=reader.nextInt();
-                if(option==2) index+=1;
-            }
-        }
-        if(option==3){
-            msg="saliendo...";
-        }else if(index==madeProducts){
-            System.out.println("No hay más");
+        if(index==-1){
+            msg = "No se pudo, no hay tal producto";
         }else{
             msg = controller.eraseProduct(index);
         }
@@ -262,15 +202,17 @@ public class Main{
 
     public String addTextToUser(){
         String msg="";
-        int indexUser = choseUser();
-        int indexProduct = choseProduct();
+        int indexUser = selectUser();
         if(indexUser<0){
-            msg+="No mas usuarios";
-        }else if(indexProduct<0){
-            msg="No hay mas libros";
-        }else{
+            msg+="No existe el usuario";
+        }else {
+            int indexProduct = selectProduct();
+            if(indexProduct<0){
+                msg="No existe el producto";
+            }else{
             msg=controller.addTextToUser(indexProduct, indexUser);
         }
+    }
         return msg;
     }
 
@@ -289,7 +231,7 @@ public class Main{
             }else{
                 System.out.println(controller.getUserInfo(indexUser));
                 System.out.println("1: Seleccionar, 2: Siguiente");
-                option=reader.nextInt();
+                option = validateInteger();
                 if(option==2) indexUser+=1;
             }
         }
@@ -311,7 +253,7 @@ public class Main{
             }else{
                 System.out.println(controller.getProductInfo(indexProduct));
                 System.out.println("1: Seleccionar, 2: Siguiente");
-                option=reader.nextInt();
+                option = validateInteger();
                 if(option==2) indexProduct+=1;
             }
         }
@@ -319,7 +261,7 @@ public class Main{
     }
 
     public String readLibraryOfUser(){
-        int indexUser = choseUser();
+        int indexUser = selectUser();
         int actualPageLibrary = 0;
         int option=10;
         if(indexUser<0){
@@ -333,12 +275,11 @@ public class Main{
                 System.out.println("Digite 2 para ver la pagina anterior");
                 System.out.println("Digite 3 para leer");
                 System.out.println("Digite 0 para salir");
-                option=reader.nextInt();
+                option = validateInteger();
                 switch(option){
                     case 1:
                         actualPageLibrary+=1;
                     break;
-
                     case 2:
                     if(actualPageLibrary==0){
                         option=0;
@@ -347,6 +288,9 @@ public class Main{
                     }break;
                     case 3:
                         read(indexUser, actualPageLibrary);
+                        break;
+                    case 0:
+                        System.out.println("volviendo");
                         break;
                     default:
                     System.out.println("Opcion no valida");
@@ -359,7 +303,9 @@ public class Main{
 
     public void read(int indexUser, int actualPageLibrary){
         System.out.println("Seleccionar mediante \n1. id \n2. Cordenada");
-        int method=reader.nextInt();
+        
+        
+        int method = validateInteger();
         int actualPageProduct = 0;
 
         int option=10;
@@ -372,7 +318,7 @@ public class Main{
                 System.out.println("1. siguiente página");
                 System.out.println("2. anterior página");
                 System.out.println("0. salir");
-                option=reader.nextInt();
+                option = validateInteger();
                 switch(option){
                     case 1:
                     actualPageProduct+=1;
@@ -380,9 +326,9 @@ public class Main{
                     case 2:
                     actualPageProduct-=1;
                     break;
-                    case 3:
+                    case 0:
                     System.out.println("volviendo");
-                    controller.addPages(id, actualPageProduct);
+                    controller.addPages(indexUser, id, actualPageProduct);
                     break;
                 }
             }
@@ -390,15 +336,15 @@ public class Main{
             break;
             case 2:
             System.out.println("Inserte coordenada x");
-            int x = reader.nextInt();
+            int x = validateInteger();
             System.out.println("Inserte coordenada y");
-            int y = reader.nextInt();
+            int y = validateInteger();
             while(option!=0){
                 System.out.println(controller.getProductPageByCoordenates(indexUser, actualPageLibrary, actualPageProduct, x, y));
                 System.out.println("1. siguiente página");
                 System.out.println("2. anterior página");
                 System.out.println("0. salir");
-                option=reader.nextInt();
+                option = validateInteger();
                 switch(option){
                     case 1:
                     actualPageProduct+=1;
@@ -406,9 +352,12 @@ public class Main{
                     case 2:
                     actualPageProduct-=1;
                     break;
-                    case 3:
+                    case 0:
                     System.out.println("volviendo");
-                    controller. addPagesByCoordenates(indexUser, actualPageLibrary, actualPageProduct, x, y, actualPageProduct);
+                    controller.addPagesByCoordenates(indexUser, actualPageLibrary, actualPageProduct, x, y, actualPageProduct);
+                    break;
+                    default:
+                    System.out.println("No valido");
                     break;
                 }
             }
@@ -420,10 +369,36 @@ public class Main{
     }
 
     public int selectUser(){
-        System.out.println("Inserte el id del usuario");
+        System.out.println("Inserte el CC del usuario");
         reader.nextLine();
         String idUser = reader.nextLine();
         int index = controller.getIndexUserById(idUser);
+        return index;
+    }
+
+    public int selectProduct(){
+        System.out.println("Seleccionar producto mediante\n1. id\n2. nombre");
+        int option = -1;
+        int index = -1;
+        do{
+            option = validateInteger();
+        }while(option != 1 && option != 2);
+
+        reader.nextLine();
+        String idProduct;
+        String nameProduct;
+        switch (option){
+            case 1:
+            System.out.println("inserte el id");
+            idProduct = reader.nextLine();
+            index = controller.getIndexProductById(idProduct);
+            break;
+            case 2:
+            System.out.println("inserte el nombre");
+            nameProduct = reader.nextLine();
+            index = controller.getIndexProductByName(nameProduct);
+            break;
+        }
         return index;
     }
 
@@ -437,7 +412,7 @@ public class Main{
             int option;
             String information;
             do{
-                option = reader.nextInt();
+                option = validateInteger();
             }while(option != 1 && option !=2);
             System.out.println("Inserte informacion");
             reader.nextLine();
@@ -450,6 +425,61 @@ public class Main{
                     information = reader.nextLine();
                     msg = controller.eraseProductOfUserByName(index, information);
             }
+        }
+        return msg;
+    }
+
+    public int validateInteger() {
+        int number = -1;
+        boolean isValid = false;
+    
+        do {
+            if (reader.hasNextInt()) {
+                number = reader.nextInt();
+                isValid = true;
+            } else {
+                System.out.println("Inserte un entero válido");
+                reader.nextLine();
+            }
+        } while (!isValid);
+    
+        return number;
+    }
+
+    public double validateDouble() {
+        double number = -1;
+        boolean isValid = false;
+    
+        do {
+            if (reader.hasNextDouble()) {
+                number = reader.nextDouble();
+                isValid = true;
+            } else {
+                System.out.println("Inserte un número decimal válido");
+                reader.nextLine();
+            }
+        } while (!isValid);
+    
+        return number;
+    }
+
+    public String exit(){
+        reader.close();
+        return "saliendo...";
+    }
+
+    public String reportMenu(){
+        System.out.println("Escoja un reporte a generar\n1. acumulado de paginas leidas por tipo de producto \n2. genero o categoria mas popular");
+        System.out.println("3. Top 5 de revistas y libros \n4. cantidad vendida de cada genero de libro \n5. cantidad vendida de cada categoria de revista\n");
+        int option = validateInteger();
+        String msg = "";
+        switch(option){
+            case 1 -> msg = controller.showAmountOfPagesPerProduct();
+            case 2 -> msg = controller.showMostPopularGender();
+            case 3 -> msg = controller.top5();
+            case 4 -> msg = controller.ammountSoldBooks();
+            case 5 -> msg = controller.ammountSoldMagazines();
+            
         }
         return msg;
     }

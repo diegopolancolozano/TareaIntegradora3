@@ -2,7 +2,7 @@ package model;
 
 import java.util.Calendar;
 
-public class Bill{
+public class Bill implements Cloneable{
 
     private String idProduct;
     private Calendar transactionDate;
@@ -11,7 +11,7 @@ public class Bill{
     private int leftPage;
     private Calendar publicationDate;
 
-    public Bill(String id, double moneyPaid, int typeProduct){
+    public Bill(String id, double moneyPaid, int typeProduct, Calendar publicationDate){
         this.idProduct=id;
         this.transactionDate=Calendar.getInstance();
         this.moneyPaid=moneyPaid;
@@ -24,6 +24,12 @@ public class Bill{
                 this.typeProduct=TypeProduct.MAGAZINE;
                 break;
         }
+        this.leftPage = 0;
+        this.publicationDate=publicationDate;
+    }
+
+    public Bill(){
+
     }
 
     public String toString(){
@@ -51,9 +57,9 @@ public class Bill{
         return idProduct;
     }
 
-    public void setBill(String id, double moneyPaid, int typeProduct){
-        this.idProduct=id;
-        this.moneyPaid=moneyPaid;
+    public void setBill(double moneyPaid, int typeProduct, Calendar publicationDate){
+        this.moneyPaid = moneyPaid;
+        this.publicationDate = publicationDate;
         switch (typeProduct) {
             case 1:
                 this.typeProduct=TypeProduct.BOOK;
@@ -64,4 +70,17 @@ public class Bill{
                 break;
         }
     }
+
+    public Calendar getPublicationDate(){
+        return publicationDate;
+    }
+
+    public int getLeftPage(){
+        return leftPage;
+    }
+
+    public void addReadedPages(int readedPages){
+        this.leftPage += readedPages;
+    }
+
 }

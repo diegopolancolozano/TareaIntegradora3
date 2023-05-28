@@ -51,4 +51,19 @@ public class Book extends Bibliographic{
     public void addSold(){
         sold+=1;
     }
+
+    public int getSold(){
+        return sold;
+    }
+
+    public int getGenre(){
+        if(gender == Gender.SCIENCE_FICTION){
+            return 1;
+        }else if(gender == Gender.FANTASY){
+            return 2;
+        }else if(gender == Gender.NOVEL){
+            return 3;
+        }
+        return 0;
+    }
 }

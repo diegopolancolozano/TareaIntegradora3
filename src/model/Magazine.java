@@ -34,7 +34,7 @@ public class Magazine extends Bibliographic{
         return msg;
     }
 
-    public void setDetails(int category, String periodicity, double priceSuscription, int numberOfSuscriptions){
+    public void setDetails(int category, String periodicity, double priceSuscription){
         switch(category){
             case 1 -> this.category=Category.VARIETIES;
             case 2 -> this.category=Category.DESIGN;
@@ -42,14 +42,28 @@ public class Magazine extends Bibliographic{
         }
         this.periodicity=periodicity;
         this.priceSuscription=priceSuscription;
-        this.numberOfSuscriptions=numberOfSuscriptions;
     }
 
-    public double getPriceSuscriptions(){
+    public double getPrice(){
         return priceSuscription;
+    }
+
+    public int getSold(){
+        return numberOfSuscriptions;
     }
 
     public void addSuscription(){
         numberOfSuscriptions+=1;
+    }
+
+    public int getCategory(){
+        if(category == Category.VARIETIES){
+            return 1;
+        }else if(category == Category.DESIGN){
+            return 2;
+        }else if(category == Category.SCIENTIFIC){
+            return 3;
+        }
+        return 0;
     }
 }

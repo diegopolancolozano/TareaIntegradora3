@@ -19,12 +19,15 @@ public abstract class Bibliographic{
         this.readedPages=0;
     }
 
-    public void setCommon(String name, String id, Calendar publicationDate, String urlImage, int pages){
+    public void setCommon(String name,  Calendar publicationDate, String urlImage, int pages){
         this.name=name;
-        this.id=id;
         this.publicationDate=publicationDate;
         this.urlImage=urlImage;
         this.pages=pages;
+    }
+
+    public int getReadedPages(){
+        return readedPages;
     }
 
     protected String getCommon(){
@@ -54,12 +57,16 @@ public abstract class Bibliographic{
         return msg;
     }
 
-    public void addReadedPages(int readedpages){
-        this.readedPages+=readedPages;
+    public void addReadedPages(int morePages){
+        this.readedPages += morePages;
     }
 
     public String getName(){
         return name;
+    }
+
+    public Calendar getPublicationDate(){
+        return publicationDate;
     }
 
 }
